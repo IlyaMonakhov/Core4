@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserManager {
 
@@ -26,44 +27,21 @@ public class UserManager {
                 });
     }
     public User getUser(int id) {
-        for (User user : usersList) {
-            if (user.getId() == id) {
-                return user;
-            }
-        }
-        return null;
+        return usersList.stream().filter(user -> user.getId() == id).findFirst().orElse(null);
     }
     public void deleteUser(int id){
-        User userToRemove = null;
-        for (User user : usersList){
-            if (user.getId() == id){
-                userToRemove = user;
-                break;
-            }
-        }
-        if(userToRemove != null){
-            usersList.remove(userToRemove);
-        }
+        usersList.removeIf(user -> getUser(id) == user);
+
     }
 
     public List <User> sortUserByAddress(){
         List<User> sortedUsersListAddress = new ArrayList<>();
-        Collections.sort(sortedUsersListAddress, new Comparator<User>() {
-            @Override
-            public int compare(User o1, User o2) {
-                return o1.getAddress().compareTo(o2.getAddress());
-            }
-        });
+        sortedUsersListAddress.sort((o1, o2) -> o1.getAddress().compareTo(o2.getAddress()));
         return sortedUsersListAddress;
     }
     public List<User> sortUsersByName(){
         List<User> sortedUsersListName = new ArrayList<>();
-        Collections.sort(sortedUsersListName, new Comparator<User>() {
-            @Override
-            public int compare(User o1, User o2) {
-                return o1.getName().compareTo(o2.getName());
-            }
-        });
+        sortedUsersListName.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
         return sortedUsersListName;
     }
 
