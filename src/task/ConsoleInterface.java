@@ -7,34 +7,36 @@ import java.util.Scanner;
 public class ConsoleInterface {
     private UserManager userManager = new UserManager();
     private UserInfoFileManager userInfoFileManager = new UserInfoFileManager();
-    private Scanner scanner = new Scanner(System.in);
+    private Scanner scanner;
     public void runConsoleInterface() {
         while (true) {
+            scanner = new Scanner(System.in);
             System.out.println("Введите команду:\n create - добавить\n sortAddress - сортировать пользователей по адресам\n sortName - сортировать пользователей по именам\n update - обновить\n get - получить пользователя\n list - вывести на экран\n delete - удалить пользователя\n exit - выход");
             String command = scanner.nextLine();
             switch (command) {
                 case "create":
-                create(scanner, userManager, userInfoFileManager);
+                create();
                 break;
                 case "list":
-                    list(userManager);
+                    list();
                     break;
                 case "delete":
-                    delete(scanner, userManager);
+                    delete();
                     break;
                 case "get":
-                    get(scanner, userManager);
+                    get();
                     break;
                 case "sortName":
-                    sortName(scanner,userManager);
+                    sortName();
                     break;
                 case "sortAddress":
-                    sortAddress(scanner,userManager);
+                    sortAddress();
                 case "update":
-                    update(scanner,userManager);
+                    update();
                     break;
                 case "exit":
-                    break;
+                    scanner.close();
+                    return;
 
                 default:
                         System.out.println("Вы вводите неверную команду!");
@@ -42,7 +44,7 @@ public class ConsoleInterface {
             }
         }
     }
-    private static void create(Scanner scanner, UserManager userManager, UserInfoFileManager userInfoFileManager) {
+    private void create() {
         System.out.println("Введите ID пользователя");
         int id = Integer.parseInt(scanner.nextLine());
         System.out.println("Введите имя пользователя");
@@ -59,19 +61,19 @@ public class ConsoleInterface {
         userInfoFileManager.writeDownFile(newUser);
         System.out.println("Пользователь создан и информация записана в файл.");
     }
-    private void list(UserManager userManager) {
+    private void list() {
         System.out.println("Список пользователей: ");
         userManager.getListUser().stream()
                 .sorted(Comparator.comparing(User::getId))
                 .forEach(user -> System.out.println(user.getId() + " " + user.getName() + " " + user.getAge() + " " + user.getEmail() + " " + user.getAddress()));
     }
-    private void delete(Scanner scanner, UserManager userManager) {
+    private void delete() {
         System.out.println("Введите ID пользователя для удаления");
         int id = Integer.parseInt(scanner.nextLine());
         userManager.deleteUser(id);
         System.out.println("Пользователь с ID " + id + " удален.");
     }
-    private void get(Scanner scanner, UserManager userManager) {
+    private void get() {
         System.out.println("Введите ID пользователя");
         int id = Integer.parseInt(scanner.nextLine());
         User user = userManager.getUser(id);
@@ -81,19 +83,19 @@ public class ConsoleInterface {
             System.out.println("Пользователь с ID " + id + " не найден");
         }
     }
-    private void sortName(Scanner scanner, UserManager userManager){
+    private void sortName(){
         Collections.sort(userManager.getListUser(), Comparator.comparing(User::getName));
         System.out.println("Пользователи отсортированы по имени");
         userManager.getListUser().forEach(usr -> System.out.println(usr.getName() + " " + usr.getAge() + " " + usr.getEmail() + " " + usr.getAddress()));
 
     }
-    private void sortAddress(Scanner scanner, UserManager userManager){
+    private void sortAddress(){
         Collections.sort(userManager.getListUser(), Comparator.comparing(User::getAddress));
         System.out.println("Пользователи отсортированы по адресам");
         userManager.getListUser().forEach(usr -> System.out.println(usr.getName() + " " + usr.getAge() + " " + usr.getEmail() + " " + usr.getAddress()));
 
     }
-    private void update(Scanner scanner, UserManager userManager){
+    private void update(){
         System.out.println("Введите ID пользователя для обновления");
         int id = Integer.parseInt(scanner.nextLine());
         User userToUpdate = userManager.getListUser().get(id);
