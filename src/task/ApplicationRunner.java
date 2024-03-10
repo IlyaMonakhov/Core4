@@ -2,6 +2,8 @@ package task;
 
 public class ApplicationRunner {
     public static void main(String[] args) {
+        ConsoleInterface consoleInterface = new ConsoleInterface();
+        consoleInterface.runConsoleInterface();
 
     }
 
